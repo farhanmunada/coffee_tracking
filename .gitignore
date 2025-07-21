@@ -1,3 +1,7 @@
+# Gradle env injection script
+android/app/read_env.gradle
+# Environment
+.env
 # Miscellaneous
 *.class
 *.log

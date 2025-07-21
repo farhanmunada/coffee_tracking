@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
 import 'providers/coffee_shop_provider.dart';
-import 'screens/map_screen.dart';
+import 'screens/home_page.dart';
+import 'screens/map_page.dart';
+import 'screens/setting_page.dart';
 
 void main() {
   runApp(const AppRoot());
@@ -13,14 +14,9 @@ class AppRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final router = GoRouter(
-      routes: [
-        GoRoute(path: '/', builder: (context, state) => const MapScreen()),
-      ],
-    );
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => CoffeeShopProvider())],
-      child: MaterialApp.router(
+      child: MaterialApp(
         title: 'SIG Kopi Temanggung',
         theme: ThemeData(
           colorScheme: ColorScheme.light(
@@ -42,7 +38,41 @@ class AppRoot extends StatelessWidget {
             ),
           ),
         ),
-        routerConfig: router,
+        home: const MainNavigation(),
+      ),
+    );
+  }
+}
+
+class MainNavigation extends StatefulWidget {
+  const MainNavigation({super.key});
+
+  @override
+  State<MainNavigation> createState() => _MainNavigationState();
+}
+
+class _MainNavigationState extends State<MainNavigation> {
+  int _selectedIndex = 0;
+  final List<Widget> _pages = const [HomePage(), MapPage(), SettingPage()];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(index: _selectedIndex, children: _pages),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Setting'),
+        ],
       ),
     );
   }

@@ -42,3 +42,6 @@ android {
 flutter {
     source = "../.."
 }
+
+// Inject Google Maps API Key from .env
+apply(from = "read_env.gradle")
