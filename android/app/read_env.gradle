@@ -1,0 +1,30 @@
+import java.util.Properties
+
+def getEnvVar(String key) {
+    def envFile = rootProject.file(".env")
+    if (!envFile.exists()) return null
+    Properties props = new Properties()
+    envFile.withInputStream { props.load(it) }
+    return props.getProperty(key)
+}
+
+def gmapsKey = getEnvVar("GOOGLE_MAPS_API_KEY")
+if (gmapsKey != null && gmapsKey != "") {
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.processManifest.doLast {
+                def manifestFile = file(output.processManifest.manifestOutputFile)
+                def manifestText = manifestFile.getText('UTF-8')
+                manifestText = manifestText.replaceAll(
+                    /<meta-data\s+android:name="com.google.android.geo.API_KEY"[\s\S]*?\/?>/,
+                    ''
+                )
+                manifestText = manifestText.replaceFirst(
+                    /(<application[\s\S]*?>)/,
+                    '$1\n        <meta-data android:name="com.google.android.geo.API_KEY" android:value="$gmapsKey" />'
+                )
+                manifestFile.write(manifestText, 'UTF-8')
+            }
+        }
+    }
+}

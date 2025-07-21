@@ -5,9 +5,9 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- Tambahkan API key Google Maps di bawah ini sebelum build release -->
-        <!-- <meta-data
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" /> -->
+            android:value="AIzaSyC9qRg0EJ0zxfqw0majxhcaxM7QLFsdb18" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
